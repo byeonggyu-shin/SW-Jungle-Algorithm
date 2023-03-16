@@ -1,0 +1,299 @@
+정수 배열이 주어졌을 때, 배열의 모든 값을 더하는 함수를 작성하시오.
+문자열이 주어졌을 때, 문자열의 모든 문자를 역순으로 출력하는 함수를 작성하시오.
+이진 탐색 알고리즘을 구현하시오.
+주어진 문자열에서 가장 많이 나오는 문자를 찾는 함수를 작성하시오.
+
+순환 소수 판별
+
+
+recursion
+
+1. factorial  => math.factorial
+
+2. 유클리드 호제법 => 최대 공약수를 재귀적으로 구하는 방법
+
+    def gcd(a, b):
+        if b == 0:
+            return a
+        return gcd(b, a % b)
+
+    => 여기서 a와 b는 정수형 변수이며, a는 b보다 크거나 같은 양의 정수입니다. 
+    함수 호출 시 gcd(a, b)를 호출하면 위의 알고리즘에 따라 최대공약수를 반환
+
+    => math.gcd() 함수 제공 
+
+3. 알고리즘 분석
+
+    순수한 재귀 함수 => 재귀 호출을 여러번 실행
+
+    상향식 하향식
+
+        순열 조합
+
+        소수 판별(에라토스테네스의 접근)
+        *제곱근 n 이하의 모든 소수로 나누었을 때 나누어 떨어지지 않는다
+
+        def isPrime(num):
+            if num <= 1:
+                return False
+            else:
+                for i in range(2, int(num**0.5)+1):
+                    if num % i == 0:
+                        return False
+                    return True
+        소수 판별(에라토스테네스의 체)
+        sieve = [False, False] + ([True] * (n - 1))
+        primes = []
+
+        for i in range(2, n + 1):
+            if sieve[i]:
+                primes.append(i)
+            for j in range(i * 2, n + 1, i):
+                sieve[j] = False
+
+        print(primes)
+
+정렬 
+    1. 버블 정렬
+
+        ex) bubble_sort()
+            def bubble_sort(arr):
+                n = len(arr)
+                # 배열의 모든 요소에 대해 반복
+                for i in range(n):
+                    # 각 반복마다 배열의 마지막 요소는 정렬이 완료되므로 제외
+                    for j in range(n-i-1):
+                        # 현재 요소와 그 다음 요소를 비교하고, 순서가 잘못되어 있다면 서로 교환
+                        if arr[j] > arr[j+1]:
+                            arr[j], arr[j+1] = arr[j+1], arr[j]
+
+            # 예시
+            arr = [5, 2, 9, 1, 5, 6]
+            bubble_sort(arr)
+            print(arr)  # Output: [1, 2, 5, 5, 6, 9]
+
+            인접한 두 원소를 비교하면서 정렬 수행  <= 간단하지만 비효율적인 정렬 알고리즘
+
+    2. 단순 선택 정렬
+
+        ex) selection_sort()
+            def selection_sort(arr):
+                n = len(arr)
+                # 배열의 모든 요소에 대해 반복
+                for i in range(n):
+                    # i번째 위치부터 마지막 위치까지 중에서 가장 작은 값을 찾아서 i번째 위치와 교환
+                    min_index = i
+                    for j in range(i+1, n):
+                        if arr[j] < arr[min_index]:
+                            min_index = j
+                    arr[i], arr[min_index] = arr[min_index], arr[i]
+
+            # 예시
+            arr = [5, 2, 9, 1, 5, 6]
+            selection_sort(arr)
+            print(arr)  # Output: [1, 2, 5, 5, 6, 9]
+
+            주어진 배열의 최소값을 선택하여 맨 앞의 위치와 교환하고 다음으로 작은 값을 선택하여 두 번쨰 위치와 교환하는 방식의 정렬
+
+
+    3. 단순 삽입 정렬
+
+        ex) insertion_sort()
+            def insertion_sort(arr):
+                n = len(arr)
+                # 배열의 모든 요소에 대해 반복
+                for i in range(1, n):
+                    # i번째 위치의 요소를 적절한 위치에 삽입
+                    key = arr[i]
+                    j = i - 1
+                    while j >= 0 and arr[j] > key:
+                        arr[j+1] = arr[j]
+                        j -= 1
+                    arr[j+1] = key
+
+            # 예시
+            arr = [5, 2, 9, 1, 5, 6]
+            insertion_sort(arr)
+            print(arr)  # Output: [1, 2, 5, 5, 6, 9]
+
+            각 요소를 적절한 위치에 삽입하여 정렬 하는 알고리즘
+
+      3-1. 이산 삽입 정렬  <= bisect.insort()
+            
+            ex) discrete_insertion_sort()
+                def discrete_insertion_sort(arr):
+                    n = len(arr)
+                    # 배열의 모든 요소에 대해 반복
+                    for i in range(1, n):
+                        # i번째 위치의 요소를 적절한 위치에 삽입
+                        key = arr[i]
+                        j = bisect_left(arr[:i], key)
+                        arr[j+1:i+1] = arr[j:i]
+                        arr[j] = key
+
+                # 예시
+                from bisect import bisect_left
+
+                arr = [5, 2, 9, 1, 5, 6]
+                discrete_insertion_sort(arr)
+                print(arr)  # Output: [1, 2, 5, 5, 6, 9]
+
+                단순 삽입 정렬과 유사하지만, 이전의 삽입된 요소들과 비교하여 적절한 위치를 찾아 삽입하는 방식으로 정렬을 수행하는 알고리즘, 정렬이 완료될 떄까지 맨번 배열의 모든 요소를 비교하는 단순 삽입 정렬과 달리, 이전의 요소들만을 비교하여 적절한 위치를 찾으므로 더 효율적인 알고리즘이 될 수 있다.
+
+            bisect.insort()
+            => 'bisect' 모듈에서 제공하는 함수
+             리스트를 이진 검색하여 새로운 요소를 정렬된 순서로 삽입하는 기능을 제공
+             정렬된 리스트, 삽입하려는 요소를 인수로 받아 이진 검색 알고리즘 이용하여 리스트에서 삽입 위치를 찾은 후 
+             'list.insert()' 메서드를 이용해 해당 위치에 삽입
+
+    4. 셸 정렬
+
+            ex) shell_sort()
+                def shell_sort(arr):
+                    n = len(arr)
+                    gap = n // 2
+                    # 간격(gap)을 점점 줄여가며 삽입 정렬 수행
+                    while gap > 0:
+                        for i in range(gap, n):
+                            temp = arr[i]
+                            j = i
+                            # 삽입 정렬 수행
+                            while j >= gap and arr[j-gap] > temp:
+                                arr[j] = arr[j-gap]
+                                j -= gap
+                            arr[j] = temp
+                        gap //= 2
+
+                # 예시
+                arr = [5, 2, 9, 1, 5, 6]
+                shell_sort(arr)
+                print(arr)  # Output: [1, 2, 5, 5, 6, 9]
+
+                삽입 정렬을 보완, 정렬할 배열을 일정한 간격을 나누어 각각을 삽입 정렬한 후, 간격을 줄여가며 다시 삽입정렬을 반복하는 알고리즘
+
+    5. 퀵 정렬
+
+            ex) quick_sort()
+                def quick_sort(arr, left, right):
+                    if left >= right:
+                        return
+
+                    pivot = arr[(left + right) // 2]  # 피벗은 중간값으로 선택
+                    i, j = left, right
+                    while i <= j:
+                        # 피벗보다 큰 값을 찾을 때까지 i를 증가
+                        while arr[i] < pivot:
+                            i += 1
+                        # 피벗보다 작은 값을 찾을 때까지 j를 감소
+                        while arr[j] > pivot:
+                            j -= 1
+                        # i와 j의 위치를 바꾸고, i와 j를 각각 한 칸씩 이동
+                        if i <= j:
+                            arr[i], arr[j] = arr[j], arr[i]
+                            i += 1
+                            j -= 1
+
+                    # 재귀 호출로 퀵 정렬을 수행
+                    quick_sort(arr, left, j)
+                    quick_sort(arr, i, right)
+
+                # 예시
+                arr = [5, 2, 9, 1, 5, 6]
+                quick_sort(arr, 0, len(arr)-1)
+                print(arr) # Output: [1, 2, 5, 5, 6, 9]
+
+
+                분할 정복 알고리즘의 하나, 평균적으로 가장 빠른 속도를 보이는 정렬 알고리즘 
+
+    6. 병합 정렬
+
+            ex) merge_sort()
+                def merge_sort(arr):
+                    if len(arr) <= 1:
+                        return arr
+
+                    mid = len(arr) // 2
+                    left = merge_sort(arr[:mid])
+                    right = merge_sort(arr[mid:])
+
+                    # 병합 과정
+                    i = j = 0
+                    merged = []
+                    while i < len(left) and j < len(right):
+                        if left[i] <= right[j]:
+                            merged.append(left[i])
+                            i += 1
+                        else:
+                            merged.append(right[j])
+                            j += 1
+                    merged += left[i:]
+                    merged += right[j:]
+
+                    return merged
+
+                # 예시
+                arr = [5, 2, 9, 1, 5, 6]
+                sorted_arr = merge_sort(arr)
+                print(sorted_arr)  # Output: [1, 2, 5, 5, 6, 9]
+
+                분할 정복 알고리즘의 하나, 리스트를 반씩 분할한 후, 각 부분 리스트를 정렬하여, 정렬된 부분 리스트를 병합하여 최종적을 정렬된 리스트를 얻는 알고리즘 
+    7. 힙 정렬
+
+            ex) heap_sort()
+                import heapq
+
+                def heap_sort(arr):
+                    h = []
+                    # 리스트의 요소를 힙에 추가
+                    for i in arr:
+                        heapq.heappush(h, i)
+
+                    # 힙에서 요소를 하나씩 꺼내서 정렬된 리스트에 추가
+                    sorted_arr = []
+                    while h:
+                        sorted_arr.append(heapq.heappop(h))
+
+                    return sorted_arr
+
+                # 예시
+                arr = [5, 2, 9, 1, 5, 6]
+                sorted_arr = heap_sort(arr)
+                print(sorted_arr)  # Output: [1, 2, 5, 5, 6, 9]
+
+                최대 힙(Max heap) 또는 최소 힙(Min heap) 구조를 이용하여 정렬하는 알고리즘, 힙 구조는 부모 노드가 자식 노드보다 큰 값 또는 작은 값만을 가지는 이진 트리 구조
+
+    8. 도수 정렬
+
+            ex) counting_sort()
+                def counting_sort(arr):
+                    # 데이터의 범위를 구함
+                    max_val = max(arr)
+                    min_val = min(arr)
+
+                    # 데이터가 등장한 횟수를 세는 리스트 생성
+                    count = [0] * (max_val - min_val + 1)
+
+                    # 데이터가 등장한 횟수를 count 리스트에 저장
+                    for i in arr:
+                        count[i - min_val] += 1
+
+                    # count 리스트를 누적합으로 변경
+                    for i in range(1, len(count)):
+                        count[i] += count[i-1]
+
+                    # 정렬된 결과를 저장할 리스트 생성
+                    sorted_arr = [0] * len(arr)
+
+                    # count 리스트를 이용하여 데이터를 정렬
+                    for i in arr:
+                        sorted_arr[count[i - min_val] - 1] = i
+                        count[i - min_val] -= 1
+
+                    return sorted_arr
+
+                # 예시
+                arr = [5, 2, 9, 1, 5, 6]
+                sorted_arr = counting_sort(arr)
+                print(sorted_arr)  # Output: [1, 2, 5, 5, 6, 9]
+
+                도수 정렬(Counting sort)은 정렬할 데이터의 범위를 알고 있을 때, 각 데이터가 몇 번 등장했는지 세는 작업을 통해 정렬하는 알고리즘
