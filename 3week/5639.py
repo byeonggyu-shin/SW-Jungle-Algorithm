@@ -3,41 +3,26 @@
 import sys
 sys.setrecursionlimit(10**6)  
 
-# 루트 부터 왼쪽으로 차례대로 노드에 넣고
-# 출력은 후위 순회한 결과 출력 
-
-class Node:
-  def __init__(self, value):
-    self.item = value
-    self.left = None
-    self.right = None
-
-def insert_node(node, value):
-    if node is None:
-        return Node(value)
-    else:
-        if value < node.value:
-            node.left = insert_node(node.left, value)
-        else:
-            node.right = insert_node(node.right, value)
-    return node
-
-def postorder_traversal(node):
-    if node is not None:
-        postorder_traversal(node.left)
-        postorder_traversal(node.right)
-        print(node.item)
-  
-root = None
+lst = []
 
 while True:
     try:
-        value = int(sys.stdin.readline())
+        lst.append(int(sys.stdin.readline()))
     except:  # 입력이 끝나면 종료합니다.
         break
 
-    if not root:
-        root = Node(value)
-    else:
-        insert_node(root, value)
 
+def postorder_traversal(first, end):
+    if first > end:
+        return
+    mid = end+1  # 루트보다 큰 값이 존재하지 않을 경우를 대비   
+    for i in range(first+1 , end+1):
+        if lst[first] < lst[i]:
+            mid = i
+            break
+
+    postorder_traversal(first+1, mid-1)
+    postorder_traversal(mid, end)
+    print(lst[first])
+
+postorder_traversal(0, len(lst)-1)
