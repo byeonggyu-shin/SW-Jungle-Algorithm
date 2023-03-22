@@ -22,11 +22,10 @@ for i in range(1, n + 1):
 while q:
     now = heapq.heappop(q)
     result.append(now)
-
+    
     for i in graph[now]:
-        
         indegree[i] -= 1
         if indegree[i] == 0:
             heapq.heappush(q, i)
 
-print(result)
+print(" ".join(map(str, result)))
